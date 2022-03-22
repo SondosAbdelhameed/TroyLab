@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
           UserSeeder::class
         ]);
         School::factory(10)->create();
-        for ($i = 0; $i<50 ; $i++) {
+        for ($i = 0; $i<10000 ; $i++) {
           Student::factory(1)->create();
         }
         //Student::factory(100)->create();

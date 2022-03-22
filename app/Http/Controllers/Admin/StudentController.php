@@ -4,11 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Events\Reorder;
+use Illuminate\Support\Facades\Artisan;
 
 use App\Models\Student;
 use App\Models\School;
-use Mail;
 
 class StudentController extends Controller
 {
@@ -110,8 +109,11 @@ class StudentController extends Controller
      */
     public function destroy($id)
     {
+      $student = Student::find($id);
       Student::find($id)->delete();
-      event(new Reorder(auth()->user()));
+      Artisan::call('command:reorder-student', [
+        'school' => $student->school_id, 'student_order' => $student->order, '--queue' => 'default'
+      ]);
       return redirect()->route('mstudent.index')->with('message', 'Success');
     }
 }
